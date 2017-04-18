@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "UserViewController.h"
 
 @interface AppDelegate ()
 
@@ -16,7 +17,12 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    UserViewController *userInfoVC = [[UserViewController alloc] init];
+    self.window.rootViewController = userInfoVC;
+    [self.window makeKeyAndVisible];
+    
+//
     return YES;
 }
 
