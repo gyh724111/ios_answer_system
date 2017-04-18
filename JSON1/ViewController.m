@@ -57,7 +57,6 @@
     NSLog(@"跳转坐班答疑查询界面");
     JsonArrayController *jac = [[JsonArrayController alloc] init];
     self.view.window.rootViewController = jac;
-    
 }
 
 

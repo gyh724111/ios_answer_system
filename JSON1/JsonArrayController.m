@@ -46,6 +46,15 @@ NSString *orderothers;
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
+    UIButton *tcsearchbackButton = [[UIButton alloc] initWithFrame:CGRectMake(10,30, 40, 30)];
+    tcsearchbackButton.backgroundColor = [UIColor clearColor];
+    [tcsearchbackButton setTitle:@"< 返回" forState:UIControlStateNormal];
+    [tcsearchbackButton sizeToFit];
+    [tcsearchbackButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [tcsearchbackButton addTarget:self action:@selector(backtoguidepage:)  forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:tcsearchbackButton];
+    
+    
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,70,kScreenWidth,20)];
     [titleLabel setText:@"坐班答疑安排查询"];
     titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -111,7 +120,6 @@ NSString *orderothers;
 
 - (void)getTCsRequest:(id)sender
 {
-    
     NSString *teachername = [_teachernameTextField text];
     NSString *thesecourses = [_thesecoursesTextField text];
     //数据库读IP
@@ -378,6 +386,12 @@ NSString *orderothers;
     
 }
 
+- (void)backtoguidepage:(id)sender{
+    NSLog(@"backtoguidepage");
+    ViewController *vc = [[ViewController alloc] init];
+    self.view.window.rootViewController = vc;
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSString *btnTitle = [alertView buttonTitleAtIndex:buttonIndex];
     NSString *orderinput = [[alertView textFieldAtIndex:orderinput] text];
@@ -388,6 +402,7 @@ NSString *orderothers;
         NSLog(@"你点击了预约按钮");
         
         [self orderRequest:self];
+        
     }
 }
 
