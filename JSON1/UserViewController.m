@@ -29,6 +29,7 @@
 
 //static NSString *IP;
 NSString *Server_ipfinal;
+NSString *Userid;
 
 @implementation UserViewController
 
@@ -108,6 +109,7 @@ NSString *Server_ipfinal;
 {
  
     NSString *userid = [_useridTextField text];
+    Userid = userid;
     NSString *password = [_passwordTextField text];
     //数据库读IP
     const char *selectSql="select SERVER_IP from answer_system";
@@ -189,8 +191,37 @@ NSString *Server_ipfinal;
         // 显示弹出框
         [alertViewresult show];
         if ([StringStat isEqualToString:@"0"]){
+            
+            //存userid
+            NSArray *documentsPaths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask , YES);
+            NSString *databaseFilePath=[[documentsPaths objectAtIndex:0] stringByAppendingPathComponent:@"mydb"];
+            //打开数据库
+            if (sqlite3_open([databaseFilePath UTF8String], &db)==SQLITE_OK) {
+                NSLog(@"sqlite db is opened.");
+            }
+            else{ return;}//打开不成功就返回
+            NSString *updateuseridSql=@"update answer_system set User_id = ";
+            updateuseridSql = [updateuseridSql stringByAppendingString:[NSString stringWithFormat:@"'%@' ",Userid]];
+            updateuseridSql = [updateuseridSql stringByAppendingString:[NSString stringWithFormat:@" where SERVER_IP is not NULL"]];
+            NSLog(@"UPDATE user_id sql:%@",updateuseridSql);
+            const char *updateuseridSql2 = [updateuseridSql UTF8String];
+            
+            NSLog(@"update user_id sql2:%s",updateuseridSql2);
+            if (sqlite3_exec(db, updateuseridSql2, NULL, NULL, &error)==SQLITE_OK) {
+                NSLog(@"update user id operation is ok.");
+            }else
+            {
+                NSLog(@"error: %s",error);
+                sqlite3_free(error);//每次使用完毕清空error字符串，提供给下一次使用
+            }
+
+            
+            
+            
         ViewController *vc = [[ViewController alloc] init];
         self.view.window.rootViewController = vc;
+            
+            
         }
     }
     NSLog(@"%@",obj);
@@ -207,7 +238,7 @@ NSString *Server_ipfinal;
         NSString *btnTitle = [alertView buttonTitleAtIndex:buttonIndex];
     NSString *inputip = [[alertView textFieldAtIndex:inputip] text];
     
-    //NSString *gServer_IP = @"http://";
+   
     
     if ([btnTitle isEqualToString:@"绑定"]) {
                  NSLog(@"你点击了绑定ip按钮");
@@ -233,7 +264,7 @@ NSString *Server_ipfinal;
         //建表answer_system
         
 
-        const char *createSql = "CREATE TABLE `answer_system` ( `SERVER_IP` CHAR(15) , `User_id` INT(12), `Username` CHAR(20), `User_type` INT(2), `wait_answer_id` INT(10))";
+        const char *createSql = "CREATE TABLE `answer_system` ( `SERVER_IP` CHAR(15) , `User_id` CHAR(12), `Username` CHAR(20), `User_type` INT(2), `wait_answer_id` CHAR(10))";
         if (sqlite3_exec(db, createSql, NULL, NULL, &error)==SQLITE_OK) {
             NSLog(@"create table is ok.");
         }

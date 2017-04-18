@@ -33,6 +33,9 @@ NSMutableArray *teachernamearr;
 NSMutableArray *thesecoursesarr;
 NSMutableArray *answertimearr;
 NSMutableArray *othersarr;
+NSString *TCsid;
+NSString *user_id;
+NSString *orderothers;
 
 @implementation JsonArrayController
 @synthesize listData=_listData;
@@ -92,7 +95,7 @@ NSMutableArray *othersarr;
     
     [self getTCsRequest:self];
     
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,160, kScreenWidth , kScreenHeight - 150) style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(30,160, kScreenWidth - 60, kScreenHeight - 150) style:UITableViewStylePlain];
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
     [self.view addSubview:self.tableView];
@@ -118,29 +121,63 @@ NSMutableArray *othersarr;
         NSLog(@"TCSearch:sqlite db is opened.");
     }
     else{ return;}
-    const char *selectSql="select SERVER_IP from answer_system";
-    sqlite3_stmt *statement;
-    if (sqlite3_prepare_v2(db,selectSql, -1, &statement, nil)==SQLITE_OK) {
-        NSLog(@"TCSearch:select ip operation is ok.");
-    }
-    else
-    {
-        NSLog(@"读IP error: %s",error);
-        sqlite3_free(error);
-    }
-    while(sqlite3_step(statement)==SQLITE_ROW) {
-        //int _id=sqlite3_column_int(statement, 0);
-        char *Server_ip=(char*)sqlite3_column_text(statement, 0);
-        Server_ipfinal2=[NSString stringWithCString:Server_ip encoding:NSUTF8StringEncoding];
-        NSLog(@"数据库读取ip为%@",Server_ipfinal2);
-    }
+//    const char *selectSql="select SERVER_IP from answer_system";
+//    sqlite3_stmt *statement;
+//    if (sqlite3_prepare_v2(db,selectSql, -1, &statement, nil)==SQLITE_OK) {
+//        NSLog(@"TCSearch:select ip operation is ok.");
+//    }
+//    else
+//    {
+//        NSLog(@"读IP error: %s",error);
+//        sqlite3_free(error);
+//    }
+//    while(sqlite3_step(statement)==SQLITE_ROW) {
+//        //int _id=sqlite3_column_int(statement, 0);
+//        char *Server_ip=(char*)sqlite3_column_text(statement, 0);
+//        Server_ipfinal2=[NSString stringWithCString:Server_ip encoding:NSUTF8StringEncoding];
+//        NSLog(@"数据库读取ip为%@",Server_ipfinal2);
+//    }
+//    const char *selectuseridSql="select User_id from answer_system";
+//    sqlite3_stmt *statement2;
+//    if (sqlite3_prepare_v2(db,selectuseridSql, -1, &statement2, nil)==SQLITE_OK) {
+//        NSLog(@"TCSearch:select user_id operation is ok.");
+//    }
+//    else
+//    {
+//        NSLog(@"读user_id error: %s",error);
+//        sqlite3_free(error);
+//    }
+//    while(sqlite3_step(statement)==SQLITE_ROW) {
+//        int *userid=(int*)sqlite3_column_text(statement, 0);
+//        user_id=[NSString stringWithCString:userid encoding:NSUTF8StringEncoding];
+//        NSLog(@"数据库读取user_id为%@",user_id);
+//    }
+//
+    const char *selectSql="select SERVER_IP,User_id from answer_system";
+        sqlite3_stmt *statement;
+        if (sqlite3_prepare_v2(db,selectSql, -1, &statement, nil)==SQLITE_OK) {
+            NSLog(@"TCSearch:select ip&userid operation is ok.");
+        }
+        else
+        {
+            NSLog(@"读IP Userid error: %s",error);
+            sqlite3_free(error);
+        }
+        while(sqlite3_step(statement)==SQLITE_ROW) {
+           
+            char *Server_ip=(char*)sqlite3_column_text(statement, 0);
+            char *uid=(char*)sqlite3_column_text(statement, 1);
+            Server_ipfinal2=[NSString stringWithCString:Server_ip encoding:NSUTF8StringEncoding];
+            user_id = [NSString stringWithCString:uid encoding:NSUTF8StringEncoding];
+            NSLog(@"数据库读取ip为%@ user_id为%@",Server_ipfinal2,user_id);
+        }
+
     sqlite3_finalize(statement);
     sqlite3_close(db);
     
     
     NSString *getTCsurl = [NSString stringWithFormat:@"http://%@/answer_system/getTCs.php?teacher_name=%@&these_courses=%@",Server_ipfinal2,teachername,thesecourses];
     NSLog(@"getTCsURL:getTCsurl  %@",getTCsurl);
-    //NSURL *newgetTCsurl = [NSURL URLWithString:getTCsurl];
     getTCsurl = [getTCsurl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURL *newgetTCsurl2 = [NSURL URLWithString:getTCsurl];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:newgetTCsurl2];
@@ -156,12 +193,13 @@ NSMutableArray *othersarr;
 
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
-    NSLog(@"%@",response);
+    NSLog(@"connection didReceiveResponse:%@",response);
 }
 
 
 //多次调用 分批次调用 多次调用完成之后调用didfinishloading
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    NSLog(@"connection didReceiveData");
     if (receiveData_ ==nil){
         receiveData_ = [[NSMutableData alloc] init];
     }
@@ -173,7 +211,7 @@ NSMutableArray *othersarr;
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection{
-    NSLog(@"请求完成");
+    NSLog(@"connectionDidFinishLoading请求完成");
     
     id obj = [NSJSONSerialization JSONObjectWithData:receiveData_ options:0 error:nil];
     
@@ -238,29 +276,43 @@ NSMutableArray *othersarr;
         //如果如果没有多余单元，则需要创建新的单元
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:TableSampleIdentifier];
-        //cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableSampleIdentifier];
     }
     
     else {
-        //删除cell的所有子视图
-        while ([cell.contentView.subviews lastObject] != nil)
-        {
-            [(UIView*)[cell.contentView.subviews lastObject] removeFromSuperview];
+   
+        while ([cell.contentView.subviews lastObject ]!=nil) {
+            [(UIView*)[cell.contentView.subviews lastObject]removeFromSuperview];
         }
-//        while ([cell.contentView.subviews lastObject ]!=nil) {
-//            [(UIView*)[cell.contentView.subviews lastObject]removeFromSuperview];
-//        }
     }
     //    获取当前行信息值
     NSUInteger row = [indexPath row];
     //    填充行的详细内容
-    cell.detailTextLabel.text = (answertimearr[row]);
-    cell.detailTextLabel.font =[UIFont boldSystemFontOfSize:10];
-    //    把数组中的值赋给单元格显示出来
-    cell.textLabel.text=[self.listData objectAtIndex:row];
     
-    cell.textLabel.font = [UIFont boldSystemFontOfSize:12];
-    //    设置单元格UILabel属性背景颜色
+    
+    
+    NSString *string2;
+    string2 = [othersarr[row] stringByAppendingFormat:@"\n%@",answertimearr[row]];
+    NSLog(@"string2 = %@",string2);
+    cell.detailTextLabel.numberOfLines = 0;
+    //cell.detailTextLabel.text = string2;
+    cell.detailTextLabel.font =[UIFont boldSystemFontOfSize:10];
+    NSMutableAttributedString *str2 = [[NSMutableAttributedString alloc] initWithString:string2];
+    int otherslen = [othersarr[row] length];
+    [str2 addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Courier-BoldOblique"  size:12.0] range:NSMakeRange(0,otherslen)];
+    cell.detailTextLabel.attributedText = str2;
+
+    
+    NSString *string1;
+    string1 = [teachernamearr[row] stringByAppendingFormat:@"\n%@",thesecoursesarr[row]];
+    NSLog(@"string1 = %@",string1);
+    cell.textLabel.font = [UIFont boldSystemFontOfSize:10];
+    NSMutableAttributedString *str1 = [[NSMutableAttributedString alloc] initWithString:string1];
+    int namelen = [teachernamearr[row] length];
+    [str1 addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Courier-BoldOblique"  size:12.0] range:NSMakeRange(0,namelen)];
+    cell.textLabel.attributedText = str1;
+    cell.textLabel.numberOfLines = 0;
+    //cell.textLabel.text= string1;
+    
     cell.textLabel.backgroundColor=[UIColor clearColor];
 
     return cell;
@@ -269,7 +321,7 @@ NSMutableArray *othersarr;
 -(CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"heightForRowAtIndexPath");
-    return 50;
+    return 70;
     
 }
 
@@ -292,14 +344,51 @@ NSMutableArray *othersarr;
     NSInteger row = [indexPath row];
     //    从数组中取出当前行内容
     NSString *rowValue = [self.listData objectAtIndex:row];
-    NSString *message = [[NSString alloc]initWithFormat:@"You selected%@",rowValue];
+    TCsid = [[NSString alloc]init];
+    TCsid = tcidarr[row];
+    NSString *message = [[NSString alloc]initWithFormat:@"您想预约%@老师,该老师负责课程为%@,教师答疑时间为%@,周数为%@,请输入您预约的时间等信息",teachernamearr[row],thesecoursesarr[row],answertimearr[row],othersarr[row]];
+    
     //    弹出警告信息
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"提示"
+    UIAlertView *alertorder = [[UIAlertView alloc]initWithTitle:@"提示"
                                                    message:message
                                                   delegate:self
                                          cancelButtonTitle:@"OK"
-                                         otherButtonTitles: nil];
-    [alert show];
+                                         otherButtonTitles:@"预约",nil];
+    alertorder.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alertorder show];
+}
+
+
+- (void)orderRequest:(id)sender
+{
+    
+    NSLog(@"order数据库读取ip为%@",Server_ipfinal2);
+    NSLog(@"order数据库读取user_id为%@",user_id);
+    NSString *orderurl = [NSString stringWithFormat:@"http://%@/answer_system/set_order_answer.php?wait_answer_id=%@&user_id=%@&others=%@",Server_ipfinal2,TCsid,user_id,orderothers];
+    NSLog(@"orderURL:%@",orderurl);
+    orderurl = [orderurl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSLog(@"orderURL 转义中文:%@",orderurl);
+    NSURL *orderurl2 = [NSURL URLWithString:orderurl];
+    NSLog(@"orderurl2定义:%@",orderurl2);
+    NSMutableURLRequest *request2 = [NSMutableURLRequest requestWithURL:orderurl2];
+    [request2 setHTTPMethod:@"GET"];
+    NSURLConnection *connection2 = [[NSURLConnection alloc] initWithRequest:request2 delegate:self];
+    
+    [connection2 start];
+    
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *btnTitle = [alertView buttonTitleAtIndex:buttonIndex];
+    NSString *orderinput = [[alertView textFieldAtIndex:orderinput] text];
+    orderothers = [[NSString alloc] init];
+    orderothers = orderinput;
+    
+    if ([btnTitle isEqualToString:@"预约"]) {
+        NSLog(@"你点击了预约按钮");
+        
+        [self orderRequest:self];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
