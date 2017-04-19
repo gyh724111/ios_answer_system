@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		192211B31EA6F84100418F4D /* RPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 192211B21EA6F84100418F4D /* RPViewController.m */; };
 		192C4E3F1EA4DE7F00A4B3AD /* JsonArrayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 192C4E3E1EA4DE7F00A4B3AD /* JsonArrayController.m */; };
 		196EFAF01E9C7EF7006C01F6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 196EFAEF1E9C7EF7006C01F6 /* AppDelegate.m */; };
 		196EFAF61E9C7EF7006C01F6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 196EFAF41E9C7EF7006C01F6 /* Main.storyboard */; settings = {ASSET_TAGS = (_tvshow, ); }; };
@@ -39,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		192211B11EA6F84100418F4D /* RPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPViewController.h; sourceTree = "<group>"; };
+		192211B21EA6F84100418F4D /* RPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RPViewController.m; sourceTree = "<group>"; };
 		192C4E3D1EA4DE7F00A4B3AD /* JsonArrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonArrayController.h; sourceTree = "<group>"; };
 		192C4E3E1EA4DE7F00A4B3AD /* JsonArrayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonArrayController.m; sourceTree = "<group>"; };
 		196EFAE81E9C7EF7006C01F6 /* JSON1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JSON1.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -156,6 +159,8 @@
 				196EFB2B1E9CD437006C01F6 /* UserViewController.m */,
 				192C4E3D1EA4DE7F00A4B3AD /* JsonArrayController.h */,
 				192C4E3E1EA4DE7F00A4B3AD /* JsonArrayController.m */,
+				192211B11EA6F84100418F4D /* RPViewController.h */,
+				192211B21EA6F84100418F4D /* RPViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -320,6 +325,7 @@
 			files = (
 				199212DA1E9D388F00CCB41C /* main.m in Sources */,
 				192C4E3F1EA4DE7F00A4B3AD /* JsonArrayController.m in Sources */,
+				192211B31EA6F84100418F4D /* RPViewController.m in Sources */,
 				196EFB2D1E9D2846006C01F6 /* ViewController.m in Sources */,
 				196EFB2C1E9CD437006C01F6 /* UserViewController.m in Sources */,
 				196EFAF01E9C7EF7006C01F6 /* AppDelegate.m in Sources */,
