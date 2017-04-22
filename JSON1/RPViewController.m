@@ -39,7 +39,7 @@ NSString *RPuser_id;
 
 @implementation RPViewController
 @synthesize listData=_listData;
-@synthesize tableView = tableView;
+@synthesize tableView = _tableView;
 @synthesize tableViewCell =_tableViewCell;
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -236,7 +236,7 @@ NSString *RPuser_id;
             i++;
         }
         self.listData = divisionarr;
-        [tableView reloadData];
+        [self.tableView reloadData];
         //NSLog(@"division:%@",divisionarr);
     }
     NSLog(@"obj:%@",obj);
@@ -252,13 +252,14 @@ NSString *RPuser_id;
 //返回行数，也就是返回数组中所存储数据，也就是section的元素
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSLog(@"numberOfRowsInSection");
+    //NSLog(@"numberOfRowsInSection");
     return [self.listData count];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"cellForRowAtIndexPath");
+    [self performSelector:@selector(delayMethod) withObject:nil afterDelay:2.0f];
+    //NSLog(@"cellForRowAtIndexPath");
     //    声明静态字符串型对象，用来标记重用单元格
     static NSString *TableSampleIdentifier = @"TableSampleIdentifier";
     
@@ -279,25 +280,15 @@ NSString *RPuser_id;
     NSUInteger row = [indexPath row];
     //    填充行的详细内容
     
-    
-    
-    NSString *string2;
-    string2 = [phonearr[row] stringByAppendingFormat:@"\n%@",rpothersarr[row]];
-    NSLog(@"string2 = %@",string2);
-    cell.detailTextLabel.numberOfLines = 0;
-    //cell.detailTextLabel.text = string2;
-    cell.detailTextLabel.font =[UIFont boldSystemFontOfSize:10];
-    NSMutableAttributedString *str2 = [[NSMutableAttributedString alloc] initWithString:string2];
-    int phonelen = [phonearr[row] length];
-    [str2 addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Courier-BoldOblique"  size:12.0] range:NSMakeRange(0,phonelen)];
-    cell.detailTextLabel.attributedText = str2;
-    
-    
-    NSString *string1;
-    string1 = [divisionarr[row] stringByAppendingFormat:@"\n%@",roomidarr[row]];
-    NSLog(@"string1 = %@",string1);
+    NSString *rpstring1;
+    rpstring1 = [divisionarr[row] stringByAppendingFormat:@"\n%@",roomidarr[row]];
+    if(rpstring1.length == 0){
+        NSLog(@"rpstring1 为空");
+        rpstring1 = @"unknown rpstring1";
+    }
+    NSLog(@"rpstring1 = %@",rpstring1);
     cell.textLabel.font = [UIFont boldSystemFontOfSize:10];
-    NSMutableAttributedString *str1 = [[NSMutableAttributedString alloc] initWithString:string1];
+    NSMutableAttributedString *str1 = [[NSMutableAttributedString alloc] initWithString:rpstring1];
     int divisionlen = [divisionarr[row] length];
     [str1 addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Courier-BoldOblique"  size:12.0] range:NSMakeRange(0,divisionlen)];
     cell.textLabel.attributedText = str1;
@@ -305,6 +296,24 @@ NSString *RPuser_id;
     //cell.textLabel.text= string1;
     
     cell.textLabel.backgroundColor=[UIColor clearColor];
+
+    
+    NSString *rpstring2;
+    rpstring2 = [phonearr[row] stringByAppendingFormat:@"\n%@",rpothersarr[row]];
+    if(rpstring2.length == 0){
+        NSLog(@"rpstring2 为空");
+        rpstring2 = @"unknown rpstring2";
+    }
+    NSLog(@"rpstring2 = %@",rpstring2);
+    cell.detailTextLabel.numberOfLines = 0;
+    //cell.detailTextLabel.text = string2;
+    cell.detailTextLabel.font =[UIFont boldSystemFontOfSize:10];
+    NSMutableAttributedString *str2 = [[NSMutableAttributedString alloc] initWithString:rpstring2];
+    int phonelen = [phonearr[row] length];
+    [str2 addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Courier-BoldOblique"  size:12.0] range:NSMakeRange(0,phonelen)];
+    cell.detailTextLabel.attributedText = str2;
+    
+    
     
     return cell;
 }
@@ -350,5 +359,8 @@ NSString *RPuser_id;
 - (void)viewWillAppear:(BOOL)animated {
     NSLog(@"viewWillAppear");
     [self.tableView reloadData];
+}
+- (void)delayMethod{
+    NSLog(@"RPdelay");
 }
 @end

@@ -39,7 +39,7 @@ NSString *orderothers;
 
 @implementation JsonArrayController
 @synthesize listData=_listData;
-@synthesize tableView = tableView;
+@synthesize tableView = _tableView;
 @synthesize tableViewCell =_tableViewCell;
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -214,7 +214,7 @@ NSString *orderothers;
     [receiveData_ resetBytesInRange:NSMakeRange(0, receiveData_.length)];
     [receiveData_ setLength:0];
     [receiveData_ appendData:data];
-    NSLog(@"receiveData:%@",data);
+    //NSLog(@"receiveData:%@",data);
     
 }
 
@@ -253,15 +253,16 @@ NSString *orderothers;
             i++;
         }
         self.listData = teachernamearr;
-        [tableView reloadData];
-        NSLog(@"teachernamearr:%@",teachernamearr);
+        [self.tableView reloadData];
+        NSLog(@"teachernamearr:   %@",teachernamearr);
     }
     NSLog(@"obj:%@",obj);
+    [self.tableView reloadData];
 }
 //返回多少个section
 -(NSInteger) numberOfSectionsInTableView:(UITableView *)tableView
 {
-    NSLog(@"numberOfSectionsInTableView");
+    //NSLog(@"numberOfSectionsInTableView");
     return 1;
 }
 
@@ -269,13 +270,14 @@ NSString *orderothers;
 //返回行数，也就是返回数组中所存储数据，也就是section的元素
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSLog(@"numberOfRowsInSection");
+    //NSLog(@"numberOfRowsInSection");
     return [self.listData count];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"cellForRowAtIndexPath");
+    [self performSelector:@selector(delayMethod) withObject:nil afterDelay:2.0f];
+    //NSLog(@"cellForRowAtIndexPath");
     //    声明静态字符串型对象，用来标记重用单元格
     static NSString *TableSampleIdentifier = @"TableSampleIdentifier";
  
@@ -296,25 +298,16 @@ NSString *orderothers;
     NSUInteger row = [indexPath row];
     //    填充行的详细内容
     
-    
-    
-    NSString *string2;
-    string2 = [othersarr[row] stringByAppendingFormat:@"\n%@",answertimearr[row]];
-    NSLog(@"string2 = %@",string2);
-    cell.detailTextLabel.numberOfLines = 0;
-    //cell.detailTextLabel.text = string2;
-    cell.detailTextLabel.font =[UIFont boldSystemFontOfSize:10];
-    NSMutableAttributedString *str2 = [[NSMutableAttributedString alloc] initWithString:string2];
-    int otherslen = [othersarr[row] length];
-    [str2 addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Courier-BoldOblique"  size:12.0] range:NSMakeRange(0,otherslen)];
-    cell.detailTextLabel.attributedText = str2;
-
-    
-    NSString *string1;
-    string1 = [teachernamearr[row] stringByAppendingFormat:@"\n%@",thesecoursesarr[row]];
-    NSLog(@"string1 = %@",string1);
+    NSString *tcstring1;
+    tcstring1 = [teachernamearr[row] stringByAppendingFormat:@"\n%@",thesecoursesarr[row]];
+    if(tcstring1.length == 0){
+        NSLog(@"tcstring1 为空");
+        tcstring1 = @"unknown tcstring1";
+    }
+    NSLog(@"string1 = %@",tcstring1);
     cell.textLabel.font = [UIFont boldSystemFontOfSize:10];
-    NSMutableAttributedString *str1 = [[NSMutableAttributedString alloc] initWithString:string1];
+    NSMutableAttributedString *str1;
+    str1 = [[NSMutableAttributedString alloc] initWithString:tcstring1];
     int namelen = [teachernamearr[row] length];
     [str1 addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Courier-BoldOblique"  size:12.0] range:NSMakeRange(0,namelen)];
     cell.textLabel.attributedText = str1;
@@ -323,12 +316,32 @@ NSString *orderothers;
     
     cell.textLabel.backgroundColor=[UIColor clearColor];
 
+    
+    NSLog(@"string2make by = %@ & %@",othersarr[row],answertimearr[row]);
+    NSString *tcstring2;
+    tcstring2 = [othersarr[row] stringByAppendingFormat:@"\n%@",answertimearr[row]];
+    if(tcstring2.length == 0){
+        NSLog(@"tcstring2 为空");
+        tcstring2 = @"unknown tcstring2";
+    }
+    NSLog(@"tcstring2 = %@",tcstring2);
+    cell.detailTextLabel.numberOfLines = 0;
+    //cell.detailTextLabel.text = string2;
+    cell.detailTextLabel.font =[UIFont boldSystemFontOfSize:10];
+    NSMutableAttributedString *str2;
+    str2 = [[NSMutableAttributedString alloc] initWithString:tcstring2];
+    int otherslen = [othersarr[row] length];
+    [str2 addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"Courier-BoldOblique"  size:12.0] range:NSMakeRange(0,otherslen)];
+    cell.detailTextLabel.attributedText = str2;
+
+    
+    
     return cell;
 }
 
 -(CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"heightForRowAtIndexPath");
+    //NSLog(@"heightForRowAtIndexPath");
     return 70;
     
 }
@@ -336,7 +349,7 @@ NSString *orderothers;
 //设置单元格缩进
 -(NSInteger) tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"indentationLevelForRowAtIndexPath");
+    //NSLog(@"indentationLevelForRowAtIndexPath");
     NSInteger row = [indexPath row];
     if (row % 2==0) {
         return 0;
@@ -409,5 +422,9 @@ NSString *orderothers;
 - (void)viewWillAppear:(BOOL)animated {
     NSLog(@"viewWillAppear");
     [self.tableView reloadData];
+}
+
+- (void)delayMethod{
+    NSLog(@"delay");
 }
 @end

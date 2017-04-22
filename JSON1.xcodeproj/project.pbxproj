@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		192211B31EA6F84100418F4D /* RPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 192211B21EA6F84100418F4D /* RPViewController.m */; };
+		192211B91EA862D800418F4D /* MyOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 192211B81EA862D800418F4D /* MyOrderViewController.m */; };
+		192211BC1EA908CF00418F4D /* MyOrderedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 192211BB1EA908CF00418F4D /* MyOrderedViewController.m */; };
+		192211BF1EAA5AAB00418F4D /* MyOrderedDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 192211BE1EAA5AAB00418F4D /* MyOrderedDetailViewController.m */; };
 		192C4E3F1EA4DE7F00A4B3AD /* JsonArrayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 192C4E3E1EA4DE7F00A4B3AD /* JsonArrayController.m */; };
 		196EFAF01E9C7EF7006C01F6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 196EFAEF1E9C7EF7006C01F6 /* AppDelegate.m */; };
 		196EFAF61E9C7EF7006C01F6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 196EFAF41E9C7EF7006C01F6 /* Main.storyboard */; settings = {ASSET_TAGS = (_tvshow, ); }; };
@@ -42,6 +45,12 @@
 /* Begin PBXFileReference section */
 		192211B11EA6F84100418F4D /* RPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPViewController.h; sourceTree = "<group>"; };
 		192211B21EA6F84100418F4D /* RPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RPViewController.m; sourceTree = "<group>"; };
+		192211B71EA862D800418F4D /* MyOrderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyOrderViewController.h; sourceTree = "<group>"; };
+		192211B81EA862D800418F4D /* MyOrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyOrderViewController.m; sourceTree = "<group>"; };
+		192211BA1EA908CF00418F4D /* MyOrderedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyOrderedViewController.h; sourceTree = "<group>"; };
+		192211BB1EA908CF00418F4D /* MyOrderedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyOrderedViewController.m; sourceTree = "<group>"; };
+		192211BD1EAA5AAB00418F4D /* MyOrderedDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyOrderedDetailViewController.h; sourceTree = "<group>"; };
+		192211BE1EAA5AAB00418F4D /* MyOrderedDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyOrderedDetailViewController.m; sourceTree = "<group>"; };
 		192C4E3D1EA4DE7F00A4B3AD /* JsonArrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonArrayController.h; sourceTree = "<group>"; };
 		192C4E3E1EA4DE7F00A4B3AD /* JsonArrayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonArrayController.m; sourceTree = "<group>"; };
 		196EFAE81E9C7EF7006C01F6 /* JSON1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JSON1.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -161,6 +170,12 @@
 				192C4E3E1EA4DE7F00A4B3AD /* JsonArrayController.m */,
 				192211B11EA6F84100418F4D /* RPViewController.h */,
 				192211B21EA6F84100418F4D /* RPViewController.m */,
+				192211B71EA862D800418F4D /* MyOrderViewController.h */,
+				192211B81EA862D800418F4D /* MyOrderViewController.m */,
+				192211BA1EA908CF00418F4D /* MyOrderedViewController.h */,
+				192211BB1EA908CF00418F4D /* MyOrderedViewController.m */,
+				192211BD1EAA5AAB00418F4D /* MyOrderedDetailViewController.h */,
+				192211BE1EAA5AAB00418F4D /* MyOrderedDetailViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -323,11 +338,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				192211BC1EA908CF00418F4D /* MyOrderedViewController.m in Sources */,
 				199212DA1E9D388F00CCB41C /* main.m in Sources */,
 				192C4E3F1EA4DE7F00A4B3AD /* JsonArrayController.m in Sources */,
 				192211B31EA6F84100418F4D /* RPViewController.m in Sources */,
+				192211B91EA862D800418F4D /* MyOrderViewController.m in Sources */,
 				196EFB2D1E9D2846006C01F6 /* ViewController.m in Sources */,
 				196EFB2C1E9CD437006C01F6 /* UserViewController.m in Sources */,
+				192211BF1EAA5AAB00418F4D /* MyOrderedDetailViewController.m in Sources */,
 				196EFAF01E9C7EF7006C01F6 /* AppDelegate.m in Sources */,
 				196EFB291E9CD402006C01F6 /* KeyValueView.m in Sources */,
 			);

@@ -30,6 +30,8 @@
 //static NSString *IP;
 NSString *Server_ipfinal;
 NSString *Userid;
+NSString *Username;
+NSString *Usertype;
 
 @implementation UserViewController
 
@@ -89,10 +91,17 @@ NSString *Userid;
     
     UIButton *setLoginInfoButton = [[UIButton alloc] initWithFrame:CGRectMake(100, 380, kScreenWidth - 100 * 2, 30)];
     setLoginInfoButton.backgroundColor = [UIColor redColor];
-    [setLoginInfoButton setTitle:@"登录" forState:UIControlStateNormal];
+    [setLoginInfoButton setTitle:@"学生登录" forState:UIControlStateNormal];
     [setLoginInfoButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [setLoginInfoButton addTarget:self action:@selector(loginRequest:)  forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:setLoginInfoButton];
+    
+    UIButton *setteacherLoginInfoButton = [[UIButton alloc] initWithFrame:CGRectMake(100, 430, kScreenWidth - 100 * 2, 30)];
+    setteacherLoginInfoButton.backgroundColor = [UIColor redColor];
+    [setteacherLoginInfoButton setTitle:@"教师登录" forState:UIControlStateNormal];
+    [setteacherLoginInfoButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [setteacherLoginInfoButton addTarget:self action:@selector(loginRequest2:)  forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:setteacherLoginInfoButton];
     
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"绑定IP"
                 message:@"请输入同一局域网服务器的IP地址"
@@ -111,6 +120,30 @@ NSString *Userid;
     NSString *userid = [_useridTextField text];
     Userid = userid;
     NSString *password = [_passwordTextField text];
+    
+    //写user_type
+    NSArray *documentsPaths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask , YES);
+    NSString *databaseFilePath=[[documentsPaths objectAtIndex:0] stringByAppendingPathComponent:@"mydb"];
+    //打开数据库
+    if (sqlite3_open([databaseFilePath UTF8String], &db)==SQLITE_OK) {
+        NSLog(@"sqlite db is opened.");
+    }
+    else{ return;}//打开不成功就返回
+    NSString *updatetypeSql=@"update answer_system set User_type = 2 where SERVER_IP is not NULL";
+    NSLog(@"UPDATE usertype sql:%@",updatetypeSql);
+    const char *updatetypeSql2 = [updatetypeSql UTF8String];
+    
+    NSLog(@"update user_type sql2:%s",updatetypeSql2);
+    if (sqlite3_exec(db, updatetypeSql2, NULL, NULL, &error)==SQLITE_OK) {
+        NSLog(@"update user_type operation is ok.");
+    }else
+    {
+        NSLog(@"error: %s",error);
+        sqlite3_free(error);//每次使用完毕清空error字符串，提供给下一次使用
+    }
+    
+    
+    
     //数据库读IP
     const char *selectSql="select SERVER_IP from answer_system";
     sqlite3_stmt *statement;
@@ -144,6 +177,72 @@ NSString *Userid;
     [connection start];
     
 }
+
+- (void)loginRequest2:(id)sender
+{
+    
+    NSString *userid = [_useridTextField text];
+    Userid = userid;
+    NSString *password = [_passwordTextField text];
+    //写user_type
+    
+    NSArray *documentsPaths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask , YES);
+    NSString *databaseFilePath=[[documentsPaths objectAtIndex:0] stringByAppendingPathComponent:@"mydb"];
+    //打开数据库
+    if (sqlite3_open([databaseFilePath UTF8String], &db)==SQLITE_OK) {
+        NSLog(@"sqlite db is opened.");
+    }
+    else{ return;}//打开不成功就返回
+    NSString *updatetypeSql=@"update answer_system set User_type = 1 where SERVER_IP is not NULL";
+    NSLog(@"UPDATE usertype sql:%@",updatetypeSql);
+    const char *updatetypeSql2 = [updatetypeSql UTF8String];
+    
+    NSLog(@"update user_type sql2:%s",updatetypeSql2);
+    if (sqlite3_exec(db, updatetypeSql2, NULL, NULL, &error)==SQLITE_OK) {
+        NSLog(@"update user_type operation is ok.");
+    }else
+    {
+        NSLog(@"error: %s",error);
+        sqlite3_free(error);//每次使用完毕清空error字符串，提供给下一次使用
+    }
+    
+
+    
+    
+    //数据库读IP
+    const char *selectSql="select SERVER_IP from answer_system";
+    sqlite3_stmt *statement;
+    if (sqlite3_prepare_v2(db,selectSql, -1, &statement, nil)==SQLITE_OK) {
+        NSLog(@"select operation is ok.");
+    }
+    else
+    {
+        NSLog(@"error: %s",error);
+        sqlite3_free(error);
+    }
+    while(sqlite3_step(statement)==SQLITE_ROW) {
+        //int _id=sqlite3_column_int(statement, 0);
+        char *Server_ip=(char*)sqlite3_column_text(statement, 0);
+        Server_ipfinal=[NSString stringWithCString:Server_ip encoding:NSUTF8StringEncoding];
+        NSLog(@"数据库读取ip为%@",Server_ipfinal);
+    }
+    sqlite3_finalize(statement);
+    sqlite3_close(db);
+    
+    
+    NSString *url = [NSString stringWithFormat:@"http://%@/answer_system/LoginApi.php?user_id=%@&password=%@&user_type=1",Server_ipfinal,userid,password];
+    NSURL *newurl = [NSURL URLWithString:url];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:newurl];
+    [request setHTTPMethod:@"GET"];
+    
+    NSLog(@"loginURL:%@",newurl);
+    
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    
+    [connection start];
+    
+}
+
 
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
@@ -201,9 +300,9 @@ NSString *Userid;
             }
             else{ return;}//打开不成功就返回
             NSString *updateuseridSql=@"update answer_system set User_id = ";
-            updateuseridSql = [updateuseridSql stringByAppendingString:[NSString stringWithFormat:@"'%@' ",Userid]];
+            updateuseridSql = [updateuseridSql stringByAppendingString:[NSString stringWithFormat:@"'%@' ,Username = '%@' ",Userid,loginUsername]];
             updateuseridSql = [updateuseridSql stringByAppendingString:[NSString stringWithFormat:@" where SERVER_IP is not NULL"]];
-            NSLog(@"UPDATE user_id sql:%@",updateuseridSql);
+            NSLog(@"UPDATE user_id,Username sql:%@",updateuseridSql);
             const char *updateuseridSql2 = [updateuseridSql UTF8String];
             
             NSLog(@"update user_id sql2:%s",updateuseridSql2);
@@ -215,8 +314,6 @@ NSString *Userid;
                 sqlite3_free(error);//每次使用完毕清空error字符串，提供给下一次使用
             }
 
-            
-            
             
         ViewController *vc = [[ViewController alloc] init];
         self.view.window.rootViewController = vc;
@@ -291,5 +388,7 @@ NSString *Userid;
 
         }
     }
-
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [_passwordTextField resignFirstResponder];
+}
 @end

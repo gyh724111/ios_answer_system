@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface JsonArrayController : UIViewController<UITableViewDelegate,UITableViewDataSource>
+@interface JsonArrayController : UINavigationController<UITableViewDelegate,UITableViewDataSource>
 
 @property(strong,nonatomic) NSArray *listData;
 @property(strong,nonatomic)UITableView *tableView;
