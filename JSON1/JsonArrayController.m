@@ -32,6 +32,7 @@ NSMutableArray *tcidarr;
 NSMutableArray *teachernamearr;
 NSMutableArray *thesecoursesarr;
 NSMutableArray *answertimearr;
+//NSMutableArray *answerpositionarr;
 NSMutableArray *othersarr;
 NSString *TCsid;
 NSString *user_id;
@@ -235,6 +236,7 @@ NSString *orderothers;
         teachernamearr = [[NSMutableArray alloc] init];
         thesecoursesarr = [[NSMutableArray alloc] init];
         answertimearr = [[NSMutableArray alloc] init];
+        //answerpositionarr = [[NSMutableArray alloc] init];
         othersarr = [[NSMutableArray alloc] init];
         
         for (NSDictionary *dic in arr){
@@ -242,13 +244,16 @@ NSString *orderothers;
             NSString *name = [(NSDictionary *)dic objectForKey:@"teacher_name"];
             NSString *courses = [(NSDictionary *)dic objectForKey:@"these_courses"];
             NSString *time = [(NSDictionary *)dic objectForKey:@"answer_time"];
+            NSString *position = [(NSDictionary *)dic objectForKey:@"answer_position"];
+            NSString *time2 = [time stringByAppendingFormat:@"\n%@",position];
             NSString *others = [(NSDictionary *)dic objectForKey:@"others"];
             NSLog(@"dic%d:%@",i,dic);
             NSLog(@"arr%d:%@",i,name);
             [tcidarr addObject:tcid];
             [teachernamearr addObject:name];
             [thesecoursesarr addObject:courses];
-            [answertimearr addObject:time];
+            [answertimearr addObject:time2];
+            //[answerpositionarr addObject:position];
             [othersarr addObject:others];
             i++;
         }
@@ -320,6 +325,7 @@ NSString *orderothers;
     NSLog(@"string2make by = %@ & %@",othersarr[row],answertimearr[row]);
     NSString *tcstring2;
     tcstring2 = [othersarr[row] stringByAppendingFormat:@"\n%@",answertimearr[row]];
+    //tcstring2 = [othersarr[row] stringByAppendingFormat:@"\n%@\n%@",answertimearr[row],answerpositionarr[row]];
     if(tcstring2.length == 0){
         NSLog(@"tcstring2 为空");
         tcstring2 = @"unknown tcstring2";

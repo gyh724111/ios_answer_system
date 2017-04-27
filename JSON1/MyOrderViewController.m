@@ -219,7 +219,7 @@ NSString *MOuser_id;
     //    获取当前行信息值
     NSUInteger row = [indexPath row];
     //    填充行的详细内容
-    NSLog(@"mostring1 made by %@ & %@",moteachernamearr[row],mocoursesarr[row]);
+    //NSLog(@"mostring1 made by %@ & %@",moteachernamearr[row],mocoursesarr[row]);
     NSString *mostring1;
     mostring1 = [moteachernamearr[row] stringByAppendingFormat:@"\n%@",mocoursesarr[row]];
     if(mostring1.length == 0){
